@@ -1,3 +1,4 @@
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -40,6 +41,7 @@ def print_not_a_git_repo_and_exit():
 
 def install_git_hook():
     """Install the git hook"""
+    pre_commit_file_path = resource_path("pre-commit")
     hook_path = get_hook_path()
     if hook_path.exists():
         click.secho(
@@ -47,8 +49,8 @@ def install_git_hook():
             fg="yellow",
         )
         return
-    with open(hook_path, "w") as f:
-        f.write(get_prepare_commit_msg_content())
+
+    shutil.copy(pre_commit_file_path, hook_path)
     hook_path.chmod(0o755)
 
 
@@ -61,11 +63,22 @@ def uninstall_git_hook():
 def get_hook_path():
     """Get the path to the git hook"""
     git_dir = get_git_dir()
-    return Path(git_dir) / "hooks" / "prepare-commit-msg"
+    return Path(git_dir) / "hooks" / "pre-commit"
 
 
-def get_prepare_commit_msg_content():
+def get_pre_commit_content():
     """Get the content of the prepare-commit-msg hook"""
     return """#!/bin/sh
 gitshield prepare-commit-msg --commit-msg-file "$1" --commit-source "$2" --commit-sha "$3"
-"""
+"""  # noqa: E501
+
+
+def resource_path(relative_path):
+    """Get absolute path to resource, works for dev and for PyInstaller"""
+    if getattr(sys, "frozen", False):
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = Path(sys._MEIPASS)
+    else:
+        base_path = Path(__file__).parent.parent.absolute()
+
+    return base_path / relative_path

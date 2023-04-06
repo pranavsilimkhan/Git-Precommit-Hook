@@ -24,9 +24,16 @@ def uninstall():
 
 
 @cli.command()
-def prepare_commit_msg():
-    """Run on the prepare-commit-msg hook"""
-    pass
+@click.option(
+    "--changed_file_path",
+    type=click.Path(exists=True),
+    multiple=True,
+    required=True,
+    help="Path to the changed file",
+)
+def pre_commit(changed_file_path):
+    """Run on the pre-commit hook"""
+    click.echo(changed_file_path)
 
 
 if __name__ == "__main__":
