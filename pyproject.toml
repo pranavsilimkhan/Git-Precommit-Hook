@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "GitShield"
+version = "0.1.0"
+description = "A git prepare-commit-msg hook for etecting sensitive data and scanning code vulnerability"
+authors = [
+    "Tsu-Yao Chang <tsuyaoc@g.clemson.edu>",
+    "Pranav Pradosh Silimkhan <psilimk@g.clemson.edu>",
+    "Sabbella Srinivasa Reddy <sabbels@g.clemson.edu>",
+    "Sai Nikhil Bongu <sbongu@g.clemson.edu>",
+]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.8.1,<3.12"
+click = "^8.1.3"
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.3.0"
+isort = "^5.12.0"
+flake8 = "^6.0.0"
+pyinstaller = "^5.9.0"
+
+[tool.isort]
+profile = "black"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
