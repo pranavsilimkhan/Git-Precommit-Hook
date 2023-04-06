@@ -1,0 +1,11 @@
+#!/bin/sh
+
+args=""
+
+toplevel=$(git rev-parse --show-toplevel)
+
+for file in $(git diff --name-only --cached --diff-filter=ACMR); do
+    args+="--changed_file_path $toplevel/$file "
+done
+
+gitshield-cli pre-commit $args

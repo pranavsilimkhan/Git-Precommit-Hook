@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "GitShield"
 version = "0.1.0"
-description = "A git prepare-commit-msg hook for etecting sensitive data and scanning code vulnerability"
+description = "A git pre-commit-msg hook for etecting sensitive data and scanning code vulnerability"
 authors = [
     "Tsu-Yao Chang <tsuyaoc@g.clemson.edu>",
     "Pranav Pradosh Silimkhan <psilimk@g.clemson.edu>",
