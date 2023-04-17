@@ -37,9 +37,10 @@ def pre_commit(changed_file_path):
     file1 = open(changed_file_path[0], "r")
     fileString = file1.read()
 
-    regex = r'^\w{2}-\w{2}$'
-    if(re.match(regex, fileString) != None):
-        print('There are secrets present in ', changed_file_path[0])
+    regex = r"\b\w{2}-\w{2}\b"
+    # print(re.findall(regex, fileString))
+    if(len(re.findall(regex, fileString))):
+        print('There are secrets present in ', changed_file_path[0], ' secrets - ', re.findall(regex, fileString))
 
 if __name__ == "__main__":
     cli()
