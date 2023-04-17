@@ -1,4 +1,5 @@
 import click
+import re
 from utils import check_for_git, install_git_hook, uninstall_git_hook
 
 
@@ -33,8 +34,13 @@ def uninstall():
 )
 def pre_commit(changed_file_path):
     """Run on the pre-commit hook"""
-    click.echo(changed_file_path)
+    file1 = open(changed_file_path[0], "r")
+    fileString = file1.read()
 
+    regex = r"\b\w{2}-\w{2}\b"
+    # print(re.findall(regex, fileString))
+    if(len(re.findall(regex, fileString))):
+        print('There are secrets present in ', changed_file_path[0], ' secrets - ', re.findall(regex, fileString))
 
 if __name__ == "__main__":
     cli()
