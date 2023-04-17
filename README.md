@@ -6,7 +6,7 @@
 2. In your git repository, run the following command to install `gitshield-cli` as a git pre-commit hook.
 
     ```bash
-    gitshield-cli install
+    ./gitshield-cli install
     ```
 
 ## Usage
