@@ -4,6 +4,7 @@
     "ms-python.vscode-pylance",
     "ms-python.flake8",
     "ms-python.isort",
+    "ms-python.black-formatter",
     "tamasfe.even-better-toml",
   ]
 }
