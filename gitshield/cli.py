@@ -1,7 +1,7 @@
+import os
 import re
 
 import click
-import os
 import openai
 from utils import check_for_git, install_git_hook, uninstall_git_hook
 
@@ -52,13 +52,18 @@ def pre_commit(changed_file_path):
                 import sys
 
                 sys.exit(1)
-            message = "are there any secrets like passwords or personal credentials in this code?" + fileString
+            message = (
+                "are there any secrets like passwords or personal credentials in this code?"
+                + fileString
+            )
             messages = []
 
             messages.append(
                 {"role": "user", "content": message},
             )
-            chat = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=messages)
+            chat = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo", messages=messages
+            )
 
             reply = chat.choices[0].message.content
             print(f"ChatGPT reply from analyzing  {file}: {reply}")
