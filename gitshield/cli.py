@@ -1,7 +1,7 @@
+import os
 import re
 
 import click
-import os
 import openai
 from utils import check_for_git, install_git_hook, uninstall_git_hook
 
@@ -37,7 +37,10 @@ def uninstall():
 )
 def pre_commit(changed_file_path):
     """Run on the pre-commit hook"""
-    openai.api_key = os.getenv("OPENAI_API_KEY")
+    api_key = os.getenv("OPENAI_API_KEY")
+    if api_key:
+        openai.api_key = api_key
+
     for file in changed_file_path:
         click.secho(f"Checking {file} for secrets...", fg="green")
         with open(file, "r") as f:
@@ -52,16 +55,25 @@ def pre_commit(changed_file_path):
                 import sys
 
                 sys.exit(1)
-            message = "are there any secrets like passwords or personal credentials in this code?" + fileString
+
+            if not api_key:
+                continue
+
+            message = (
+                "are there any secrets like passwords or personal credentials in this code?\n"  # noqa: E501
+                + fileString
+            )
             messages = []
 
             messages.append(
                 {"role": "user", "content": message},
             )
-            chat = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=messages)
+            chat = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo", messages=messages
+            )
 
             reply = chat.choices[0].message.content
-            print(f"ChatGPT reply from analyzing  {file}: {reply}")
+            click.echo(f"ChatGPT reply from analyzing  {file}: {reply}")
 
 
 if __name__ == "__main__":
