@@ -34,10 +34,11 @@ jobs:
     - name: Add Executable Permission to Binary
       run: chmod +x dist/gitshield-cli
 
-    - uses: vimtor/action-zip@v1
+    - name: Archive Release
+      uses: thedoctor0/zip-release@0.7.1
       with:
-        files: dist/gitshield-cli
-        output: dist/gitshield-cli-${{ matrix.os }}.zip
+        path: dist/gitshield-cli
+        filename: dist/gitshield-cli-${{ matrix.os }}.zip
 
     - name: Upload Executable
       uses: actions/upload-artifact@v3
