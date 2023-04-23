@@ -31,6 +31,9 @@ jobs:
     - name: Build Executable
       run: poetry run pyinstaller -p gitshield --add-data './pre-commit:.' --onefile --name gitshield-cli-${{ matrix.os }} gitshield/cli.py
 
+    - name: Add Executable Permission to Binary
+      run: chmod +x dist/gitshield-cli-${{ matrix.os }}
+
     - name: Upload Executable
       uses: actions/upload-artifact@v3
       with:
