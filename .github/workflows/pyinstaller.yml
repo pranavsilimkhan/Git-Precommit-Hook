@@ -29,12 +29,17 @@ jobs:
       run: poetry install
 
     - name: Build Executable
-      run: poetry run pyinstaller -p gitshield --add-data './pre-commit:.' --onefile --name gitshield-cli-${{ matrix.os }} gitshield/cli.py
+      run: poetry run pyinstaller -p gitshield --add-data './pre-commit:.' --onefile --name gitshield-cli gitshield/cli.py
 
     - name: Add Executable Permission to Binary
-      run: chmod +x dist/gitshield-cli-${{ matrix.os }}
+      run: chmod +x dist/gitshield-cli
+
+    - uses: vimtor/action-zip@v1
+      with:
+        files: dist/gitshield-cli
+        output: dist/gitshield-cli-${{ matrix.os }}.zip
 
     - name: Upload Executable
       uses: actions/upload-artifact@v3
       with:
-        path: dist/*
+        path: dist/gitshield-cli-${{ matrix.os }}.zip
