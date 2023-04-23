@@ -60,7 +60,7 @@ def pre_commit(changed_file_path):
                 continue
 
             message = (
-                "are there any secrets like passwords or personal credentials in this code?"
+                "are there any secrets like passwords or personal credentials in this code?\n"  # noqa: E501
                 + fileString
             )
             messages = []
