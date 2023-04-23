@@ -37,7 +37,10 @@ def uninstall():
 )
 def pre_commit(changed_file_path):
     """Run on the pre-commit hook"""
-    openai.api_key = os.getenv("OPENAI_API_KEY")
+    api_key = os.getenv("OPENAI_API_KEY")
+    if api_key:
+        openai.api_key = api_key
+
     for file in changed_file_path:
         click.secho(f"Checking {file} for secrets...", fg="green")
         with open(file, "r") as f:
@@ -52,6 +55,10 @@ def pre_commit(changed_file_path):
                 import sys
 
                 sys.exit(1)
+
+            if not api_key:
+                continue
+
             message = (
                 "are there any secrets like passwords or personal credentials in this code?"
                 + fileString
@@ -66,7 +73,7 @@ def pre_commit(changed_file_path):
             )
 
             reply = chat.choices[0].message.content
-            print(f"ChatGPT reply from analyzing  {file}: {reply}")
+            click.echo(f"ChatGPT reply from analyzing  {file}: {reply}")
 
 
 if __name__ == "__main__":
