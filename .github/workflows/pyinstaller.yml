@@ -29,8 +29,9 @@ jobs:
       run: poetry install
 
     - name: Build Executable
-      run: pyinstaller -p gitshield --add-data './pre-commit:.' --onefile --name gitshield-cli gitshield/cli.py
+      run: poetry run pyinstaller -p gitshield --add-data './pre-commit:.' --onefile --name gitshield-cli gitshield/cli.py
 
-    - uses: actions/upload-artifact@v2
+    - name: Upload Executable
+      uses: actions/upload-artifact@v2
       with:
         path: dist/*
