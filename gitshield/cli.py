@@ -45,16 +45,8 @@ def pre_commit(changed_file_path):
         click.secho(f"Checking {file} for secrets...", fg="green")
         with open(file, "r") as f:
             fileString = f.read()
-            regex = r"\b\w{2}-\w{2}\b"
-            if len(re.findall(regex, fileString)):
-                click.secho(
-                    f"There are secrets present in {file} secrets - \
-                      {re.findall(regex, fileString)}",
-                    fg="red",
-                )
-                import sys
 
-                sys.exit(1)
+            regexCheck(fileString, file)
 
             if not api_key:
                 continue
@@ -75,6 +67,19 @@ def pre_commit(changed_file_path):
             reply = chat.choices[0].message.content
             click.echo(f"ChatGPT reply from analyzing  {file}: {reply}")
 
+def regexCheck(file_data, file):
+    secret_pattern = r"(?:[^a-zA-Z0-9])(secret|password)\s*(=|:\s*)\s*([A-Za-z0-9_'-]{10,})"
+    secret_match = re.findall(secret_pattern, file_data)
+    if len(secret_match):
+        click.secho(
+            f"There are secrets present in {file} secrets - \
+                {secret_match}",
+            fg="red",
+        )
+        import sys
 
+        sys.exit(1)
+    else:
+        click.secho(f"No secrets were detected in {file} by the regex matcher!", fg="green")
 if __name__ == "__main__":
     cli()
