@@ -5,6 +5,14 @@ from pathlib import Path
 
 import click
 
+locale_json = None
+file_name = "en.json"
+if env["language"] == 'fr':
+    file_name = "fr.json"
+
+with open(file_name, 'r') as f:
+    # Load the JSON data into a Python dictionary
+    locale_json = json.load(f)
 
 def check_for_git():
     """Check if we are in a git repository"""
@@ -33,7 +41,7 @@ def get_git_dir():
 def print_not_a_git_repo_and_exit():
     """Print a message that we are not in a git repository"""
     click.secho(
-        "fatal: not a git repository (or any of the parent directories): .git",
+        locale_json.fatal,
         fg="red",
     )
     sys.exit(1)
@@ -45,7 +53,7 @@ def install_git_hook():
     hook_path = get_hook_path()
     if hook_path.exists():
         click.secho(
-            "Git hook already exists, skipping installation",
+            locale_json.exists,
             fg="yellow",
         )
         return
