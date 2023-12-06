@@ -85,6 +85,6 @@ def regexCheck(file_data, file):
         # return True
     else:
         click.secho(f"No secrets were detected in {file} by the regex matcher!", fg="green")
-        return False
+        # return False
 if __name__ == "__main__":
     cli()
