@@ -68,7 +68,11 @@ def pre_commit(changed_file_path):
             click.echo(f"ChatGPT reply from analyzing  {file}: {reply}")
 
 def regexCheck(file_data, file):
-    secret_pattern = r"(?:[^a-zA-Z0-9])(secret|password)\s*(=|:\s*)\s*([A-Za-z0-9_'-]{10,})"
+    secret_pattern = (
+        r"(secret|password)\b\s*(=|:\s*|=>)\s*['\"]?([A-Za-z0-9_@#$%^&*()+=\-]{8,})['\"]?"  # for secrets/passwords
+        r"|\b(api_key|API_KEY|token|TOKEN)\b\s*(=|:\s*|=>)\s*['\"]?([A-Z0-9]{12,})['\"]?"  # for API keys
+        r"|(['\"]?[A-Z0-9]{12,}['\"]?)"  # for standalone long strings of uppercase and numbers
+    )
     secret_match = re.findall(secret_pattern, file_data)
     if len(secret_match):
         click.secho(
@@ -77,9 +81,10 @@ def regexCheck(file_data, file):
             fg="red",
         )
         import sys
-
         sys.exit(1)
+        # return True
     else:
         click.secho(f"No secrets were detected in {file} by the regex matcher!", fg="green")
+        # return False
 if __name__ == "__main__":
     cli()
